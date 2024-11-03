@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\VideoAnalytics;
 use Illuminate\Http\Request;
 
 class VideoController extends Controller
@@ -23,8 +24,16 @@ class VideoController extends Controller
 
     public function show($id)
     {
-        $video = Video::findOrFail($id);
-        return view('videos.show', compact('video'));
+        try {
+            $video = Video::findOrFail($id);
+            $video->increment('views');
+            VideoAnalytics::create(['video_id' => $video->id, 'action' => 'view']);
+            return view('videos.show', compact('video'));
+        } catch (\Throwable $th) {
+            // report the error log in production properly
+            // throw $th;
+            return redirect()->route('videos.index');
+        }
     }
 
 
