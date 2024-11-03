@@ -14,8 +14,15 @@ class VideoController extends Controller
 
         // Query to get videos, optionally filtering by search term
         $videos = Video::when($search, function ($query, $search) {
-            return $query->where('title', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
+            $matchedVideos = $query->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");  // Get the matched videos to increment search_count
+
+            // Increment search_count for each matched video
+            foreach ($matchedVideos->get() as $video) {
+                $video->increment('search_count');
+            }
+
+            return $matchedVideos;  // Return the collection of matched videos
         })
             ->paginate(6); // Adjust the number per page as needed
 

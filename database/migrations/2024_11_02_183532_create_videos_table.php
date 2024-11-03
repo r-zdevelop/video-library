@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('url'); // Link de YouTube
             $table->unsignedBigInteger('views')->default(0);
+            $table->unsignedBigInteger('search_count')->default(0);
             $table->timestamps();
         });
     }
