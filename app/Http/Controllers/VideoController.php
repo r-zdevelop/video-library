@@ -21,10 +21,12 @@ class VideoController extends Controller
         return view('videos.index', compact('videos'));
     }
 
-    public function show(Video $video)
+    public function show($id)
     {
-        return $video;
+        $video = Video::findOrFail($id);
+        return view('videos.show', compact('video'));
     }
+
 
     public function create()
     {

@@ -20,4 +20,7 @@ Route::middleware(['auth', IsAdmin::class])->group(function () {
 
 Route::resource('videos', VideoController::class)->only(['index', 'show']);
 
+Route::get('videos/{id}', [VideoController::class, 'show'])->name('videos.show');
+
+
 require __DIR__ . '/auth.php';
