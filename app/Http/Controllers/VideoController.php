@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Video::all();
+        $search = $request->query('search');
+
+        // Query to get videos, optionally filtering by search term
+        $videos = Video::when($search, function ($query, $search) {
+            return $query->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        })
+            ->paginate(6); // Adjust the number per page as needed
+
+        return view('videos.index', compact('videos'));
     }
 
     public function show(Video $video)
