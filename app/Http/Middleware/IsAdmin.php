@@ -9,9 +9,9 @@ class IsAdmin
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && !Auth::user()->isAdmin()) {
-            return redirect('/'); // Redirect to home if not an admin
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return $next($request);
         }
-        return $next($request);
+        return redirect('/'); // Redirect to home if not an admin
     }
 }

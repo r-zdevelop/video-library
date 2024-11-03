@@ -26,13 +26,25 @@ class VideoController extends Controller
         return $video;
     }
 
+    public function create()
+    {
+        return view('videos.create');
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string',
-            'url' => 'required|url'
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'url' => 'required|url|regex:/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]+$/',
         ]);
-        return Video::create($request->all());
+
+        // Convert YouTube link to embed format
+        $validated['url'] = str_replace("watch?v=", "embed/", $validated['url']);
+
+        Video::create($validated);
+
+        return redirect()->route('videos.index')->with('success', 'Video added successfully!');
     }
 
     public function search(Request $request)

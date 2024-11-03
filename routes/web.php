@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VideoController;
+use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -13,7 +14,7 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::middleware(['auth', 'isAdmin'])->group(function () {
+Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::resource('videos', VideoController::class)->except(['index', 'show']);
 });
 
