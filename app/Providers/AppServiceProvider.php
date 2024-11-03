@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('create-video', function ($user) {
+        Gate::define('is-admin', function ($user) {
             return $user->role === 'admin';
         });
     }

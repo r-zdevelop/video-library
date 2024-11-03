@@ -22,5 +22,7 @@ Route::resource('videos', VideoController::class)->only(['index', 'show']);
 
 Route::get('videos/{id}', [VideoController::class, 'show'])->name('videos.show');
 
+Route::delete('videos/{id}', [VideoController::class, 'destroy'])->name('videos.destroy')->middleware(IsAdmin::class);
+
 
 require __DIR__ . '/auth.php';

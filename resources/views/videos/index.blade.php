@@ -4,14 +4,14 @@
 <div class="container mx-auto mt-8">
     <h1 class="text-3xl font-bold mb-6">Video Library</h1>
 
-    @can('create-video')
+    @can('is-admin')
         <a href="{{ route('videos.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Add New Video
         </a>
     @endcan
     
     <!-- Search Form -->
-    <form method="GET" action="{{ route('videos.index') }}" class="mb-6">
+    <form method="GET" action="{{ route('videos.index') }}" class="my-6">
         <input type="text" name="search" placeholder="Search videos..." 
                class="p-2 border border-gray-300 rounded w-full md:w-1/2" 
                value="{{ request()->query('search') }}">
@@ -37,6 +37,16 @@
                 <iframe class="mt-4 w-full h-48" src="{{ $video->url }}" frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 <a href="{{ route('videos.show', $video->id) }}" class="text-blue-500 hover:text-blue-700">View Video</a>
+
+                @can('is-admin')
+        <form action="{{ route('videos.destroy', $video->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this video?');" style="display:inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded my-2 ml-2">
+                Delete
+            </button>
+        </form>
+    @endcan
 
             </div>
         @empty

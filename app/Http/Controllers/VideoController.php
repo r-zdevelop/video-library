@@ -54,4 +54,18 @@ class VideoController extends Controller
         $query = $request->get('query');
         return Video::where('title', 'LIKE', "%{$query}%")->get();
     }
+
+    public function destroy($id)
+    {
+        $video = Video::findOrFail($id);
+
+        // Ensure only admins can delete
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('videos.index')->with('error', 'Unauthorized action.');
+        }
+
+        $video->delete();
+
+        return redirect()->route('videos.index')->with('success', 'Video deleted successfully!');
+    }
 }
