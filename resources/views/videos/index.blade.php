@@ -12,9 +12,11 @@
         <button type="submit" class="bg-blue-500 text-white p-2 rounded ml-2">Search</button>
     </form>
 
-    <a href="{{ route('videos.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Add New Video
-    </a>
+    @can('create-video')
+        <a href="{{ route('videos.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Add New Video
+        </a>
+    @endcan
 
     @if (session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
