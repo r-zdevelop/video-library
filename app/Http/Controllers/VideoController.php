@@ -4,27 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Models\VideoAnalytics;
+use App\Services\VideoRequestService;
 use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
+    protected $videoRequestService;
+
+    public function __construct(VideoRequestService $videoRequestService)
+    {
+        $this->videoRequestService = $videoRequestService;
+    }
+
     public function index(Request $request)
     {
-        $search = $request->query('search');
-
-        // Query to get videos, optionally filtering by search term
-        $videos = Video::when($search, function ($query, $search) {
-            $matchedVideos = $query->where('title', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");  // Get the matched videos to increment search_count
-
-            // Increment search_count for each matched video
-            foreach ($matchedVideos->get() as $video) {
-                $video->increment('search_count');
-            }
-
-            return $matchedVideos;  // Return the collection of matched videos
-        })
-            ->paginate(6); // Adjust the number per page as needed
+        $videos = $this->videoRequestService->handleVideoSearchRequest($request);
 
         return view('videos.index', compact('videos'));
     }
